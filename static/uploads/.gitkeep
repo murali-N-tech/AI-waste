@@ -1,0 +1,19 @@
+````
+
+**Deployment steps:**
+
+1. Add these files to your repository
+2. Push to GitHub
+3. In Railway:
+   - Create new project
+   - Choose "Deploy from GitHub repo"
+   - Select your repository
+   - Railway will automatically detect the Dockerfile and build/deploy
+
+The Dockerfile:
+- Uses Python 3.10.13 to match your [runtime.txt](http://_vscodecontentref_/0)
+- Installs system dependencies needed for TensorFlow
+- Copies and installs requirements first (for better caching)
+- Creates the required uploads directory
+- Uses gunicorn to serve the application
+- Exposes port 8000 (Railway will automatically
