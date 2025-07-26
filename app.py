@@ -1,10 +1,10 @@
 import os
-from flask import Flask, render_template, request, jsonify
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras.preprocessing import image
 import numpy as np
-from werkzeug.utils import secure_filename # For secure file naming
+from flask import Flask, render_template, request, jsonify
+from tensorflow import keras
+import tensorflow as tf
+from tensorflow.keras.preprocessing import image
+from werkzeug.utils import secure_filename
 
 # --- Flask App Configuration ---
 app = Flask(__name__)
@@ -17,20 +17,19 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 # --- Machine Learning Model Loading ---
 MODEL_PATH = 'waste_segregation_model.h5' # Path to your saved Keras model
 
-# Check if the model file exists
-if not os.path.exists(MODEL_PATH):
-    print(f"Error: Model file not found at {MODEL_PATH}")
-    print("Please ensure 'waste_segregation_model.h5' is in the same directory as app.py")
-    # You might want to exit or raise an error here in a production environment
-    exit()
-
 try:
-    model = tf.keras.models.load_model(MODEL_PATH)
-    print("Model loaded successfully!")
+    # Configure input shape explicitly
+    input_shape = (224, 224, 3)
+    inputs = tf.keras.Input(shape=input_shape)
+    
+    # Load model with custom_objects to handle input layer
+    model = tf.keras.models.load_model(MODEL_PATH, compile=False)
+    model.compile(optimizer='adam', 
+                 loss='categorical_crossentropy',
+                 metrics=['accuracy'])
 except Exception as e:
-    print(f"Error loading model: {e}")
-    # Handle the error, maybe exit the app
-    exit()
+    print(f"Error loading model: {str(e)}")
+    model = None
 
 
 # --- Model Parameters (MUST match your training setup) ---
