@@ -3,5 +3,5 @@ tensorflow-cpu
 numpy
 Werkzeug==2.3.7
 gunicorn==21.2.0
-Pillow==10.0.0
+Pillow
 setuptools
